@@ -34,22 +34,22 @@ public class MutantControllerTest {
 
     @Test
     void testSaveMutant() throws Exception {
-        // Preparar datos de prueba
+
         Dna dna = new Dna();
         List<String> dnaList = Arrays.asList("ATGCGA", "CAGTGC", "TTATGT", "AGAAGG", "CCCCTA", "TCACTG");
         dna.setDnaSequence(dnaList);
 
-        // Mockear el método estático MutantDetector.isMutant()
+
         try (MockedStatic<MutantDetector> mockedDetector = mockStatic(MutantDetector.class)) {
             mockedDetector.when(() -> MutantDetector.isMutant(dnaList)).thenReturn(true);
 
-            // Simular el guardado del ADN
+
             when(dnaService.save(any(Dna.class))).thenReturn(dna);
 
-            // Ejecutar el método
+
             ResponseEntity<?> response = mutantController.save(dna);
 
-            // Verificar el resultado
+
             assertEquals(HttpStatus.OK, response.getStatusCode());
             assertEquals(dna, response.getBody());
         }
@@ -57,19 +57,19 @@ public class MutantControllerTest {
 
     @Test
     void testSaveNonMutant() throws Exception {
-        // Preparar datos de prueba
+
         Dna dna = new Dna();
         List<String> dnaList = Arrays.asList("ATGCGA", "CAGTGC", "TTATGT", "AGAAGG", "CCCCTA", "TCACTG");
         dna.setDnaSequence(dnaList);
 
-        // Mockear el método estático MutantDetector.isMutant()
+
         try (MockedStatic<MutantDetector> mockedDetector = mockStatic(MutantDetector.class)) {
             mockedDetector.when(() -> MutantDetector.isMutant(dnaList)).thenReturn(false);
 
-            // Ejecutar el método
+
             ResponseEntity<?> response = mutantController.save(dna);
 
-            // Verificar el resultado
+
             assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
             assertEquals("{\"error\":\"No es un mutante\"}", response.getBody());
         }
@@ -77,17 +77,17 @@ public class MutantControllerTest {
 
     @Test
     void testSaveError() throws Exception {
-        // Preparar datos de prueba
-        Dna dna = new Dna();
-        dna.setDnaSequence(null); // Dato que causará error
 
-        // Simular que ocurre una excepción
+        Dna dna = new Dna();
+        dna.setDnaSequence(null);
+
+
         when(dnaService.save(any(Dna.class))).thenThrow(new RuntimeException("Error al guardar"));
 
-        // Ejecutar el método
+
         ResponseEntity<?> response = mutantController.save(dna);
 
-        // Verificar el resultado
+
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertEquals("{\"error\":\"Error\"}", response.getBody());
     }
