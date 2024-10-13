@@ -1,5 +1,5 @@
 # Etapa 1: Construir la aplicación usando Gradle
-FROM gradle:8.10.0-jdk17 AS build
+FROM gradle:8.10.0-jdk21 AS build
 
 # Configurar el directorio de trabajo dentro del contenedor
 WORKDIR /app
