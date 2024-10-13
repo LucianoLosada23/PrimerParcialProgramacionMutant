@@ -13,6 +13,7 @@ public class MutantDetector {
         int n = dna.size();
         int count = 0;
 
+        // Verificar si hay suficiente longitud
         if (n < MIN_SEQUENCE_LENGTH || dna.get(0).length() < MIN_SEQUENCE_LENGTH) {
             return false;
         }
@@ -21,12 +22,14 @@ public class MutantDetector {
         for (int i = 0; i < n; i++) {
             StringBuilder column = new StringBuilder();
             for (int j = 0; j < n; j++) {
+                // Verificar filas
                 if (j <= n - MIN_SEQUENCE_LENGTH) {
                     count += checkSequence(dna.get(i).substring(j, j + MIN_SEQUENCE_LENGTH)) ? 1 : 0;
                 }
                 column.append(dna.get(j).charAt(i));
             }
 
+            // Verificar columnas
             for (int j = 0; j <= n - MIN_SEQUENCE_LENGTH; j++) {
                 count += checkSequence(column.substring(j, j + MIN_SEQUENCE_LENGTH)) ? 1 : 0;
             }
@@ -44,7 +47,7 @@ public class MutantDetector {
             }
         }
 
-        return count > 1;
+        return count >= 2; // Debe haber al menos 2 secuencias mutantes para considerarse mutante
     }
 
     private static boolean checkSequence(String sequence) {
